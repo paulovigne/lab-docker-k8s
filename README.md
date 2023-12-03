@@ -14,7 +14,7 @@ git clone https://github.com/paulovigne/lab-docker-k8s.git
 # Install Terraform
 Follow the official Hashcorp instructions [here](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli), choose one of available instructions corresponding to your operacional system.
 
-# Complete the credential file
+# Complete the credentials file
 Get you aws credentials and insert intro `creds.txt` file:
 
 ```sh
