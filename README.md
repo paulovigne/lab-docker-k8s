@@ -25,7 +25,7 @@ aws_session_token=******************
 ```
 
 # Terraform
-On your command line interface at the terraform file's directory, follow the steps:
+On your command line interface at the terraform-file directory, follow the steps:
 
 - E.g. `lab-docker-k8s/docker`:
 
@@ -38,7 +38,7 @@ terraform init
 terraform plan
 terraform apply
 ```
-### Remove created resources
+### Removing created resources
 ```sh
 terraform destroy
 ```
