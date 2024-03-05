@@ -41,6 +41,11 @@ variable "region" {
   default     = "us-east-1"
 }
 
+variable "rancher-bootstrap-pass" {
+  description = "Intial Rancher Password"
+  default     = "admin"
+}
+
 variable "k3s-server-vm-type" {
   description = "VM Size"
   default     = "t3a.medium"
@@ -134,7 +139,7 @@ helm install rancher rancher-stable/rancher \
   --version ${var.rancher-version} \
   --namespace cattle-system \
   --set hostname=rancher.$(dig @resolver4.opendns.com myip.opendns.com +short).sslip.io \
-  --set bootstrapPassword=admin \
+  --set bootstrapPassword=${var.rancher-bootstrap-pass} \
   --set replicas=1
 CUSTOM_DATA
 }
