@@ -88,7 +88,7 @@ variable "rke2-version" {
 }
 
 variable "cert-manager-version" {
-  description = "RKE2 Kubernetes Version"
+  description = "Cert Manager Version"
   default     = "v1.14.3"
 }
 
@@ -228,13 +228,6 @@ data "aws_ami" "amazon-linux-2" {
   filter {
     name   = "name"
     values = ["amzn2-ami-hvm*"]
-  }
-}
-
-resource "aws_eip" "rancher-ip-k3s-server" {
-  tags = {
-    Name = "${var.prefix}-rancher-ip-k3s-server-eip"
-    Env  = var.prefix
   }
 }
 
