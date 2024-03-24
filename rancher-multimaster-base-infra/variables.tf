@@ -112,19 +112,3 @@ systemctl start docker && systemctl enable docker
 usermod -G docker ec2-user
 CUSTOM_DATA
 }
-
-
-locals {
-  bastion-data = <<CUSTOM_DATA
-#!/bin/bash
-yum install -y git curl wget jq
-curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" \
-  -O --output-dir /usr/local/bin
-chmod 755 /usr/local/bin/kubectl
-kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
-
-curl -LO "https://github.com/rancher/rke/releases/download/v${var.rke-version}/rke_linux-amd64" \
-  -o rke --output-dir /usr/local/bin
-chmod 755 /usr/local/bin/rke
-CUSTOM_DATA
-}
