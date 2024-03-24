@@ -1,0 +1,63 @@
+#!/bin/bash
+mkdir -p  ~ec2-user/scripts
+
+sudo curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" \
+       -O --output-dir /usr/local/bin
+sudo chmod 755 /usr/local/bin/kubectl
+kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
+
+sudo curl -L "https://github.com/rancher/rke/releases/download/v${rke-version}/rke_linux-amd64" \
+       -o rke --output-dir /usr/local/bin
+sudo chmod 755 /usr/local/bin/rke
+
+cat > ~ec2-user/scripts/k3s-server-bootstrap-install.sh <<EOF
+curl -sfL https://get.k3s.io | \
+  INSTALL_K3S_VERSION=${k3s-version} \
+  K3S_TOKEN=${share_token} \
+  sh -s - server \
+    --cluster-init \
+    --secrets-encryption
+
+kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
+EOF
+
+cat > ~ec2-user/scripts/k3s-server-install.sh <<EOF
+curl -sfL https://get.k3s.io | \
+  INSTALL_K3S_VERSION=${k3s-version} \
+  K3S_TOKEN=${share_token} \
+  sh -s - server \
+    --server https://${k3s-server-bootstrap}:6443 \
+    --secrets-encryption
+EOF
+
+cat > ~ec2-user/scripts/helm-install.sh <<EOF
+curl -sSL https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+helm repo add rancher-stable https://releases.rancher.com/server-charts/stable
+helm repo add jetstack https://charts.jetstack.io
+helm repo update
+EOF
+
+cat > ~ec2-user/scripts/rancher-install.sh <<EOF
+export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
+
+kubectl create namespace cattle-system
+kubectl create namespace cert-manager
+
+helm install \
+  cert-manager jetstack/cert-manager \
+  --namespace cert-manager \
+  --create-namespace \
+  --version ${cert-manager-version} \
+  --set installCRDs=true
+
+helm install rancher rancher-stable/rancher \
+  --version ${rancher-version} \
+  --namespace cattle-system \
+  --set hostname=rancher.${k3s-server-lb}.sslip.io \
+  --set bootstrapPassword=${rancher-bootstrap-pass} \
+  --set replicas=3
+EOF
+
+chown -R ec2-user. ~ec2-user/scripts
+chmod +x ~ec2-user/scripts/*.sh
+chmod 600 ~ec2-user/.ssh/id_rsa
