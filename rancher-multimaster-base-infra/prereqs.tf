@@ -21,7 +21,7 @@ resource "aws_key_pair" "vm" {
 resource "local_file" "rke-cluster-file" {
   content = templatefile("rke_cluster.tmpl",
     {
-      k8s-master-ips = aws_instance.rancher-cluster-rke-master.*.private_ip
+      k8s-master-ips   = aws_instance.rancher-cluster-rke-master.*.private_ip
       k8s-master-nodes = aws_instance.rancher-cluster-rke-master.*.private_dns
       k8s-worker-nodes = aws_instance.rancher-cluster-rke-worker.*.private_dns
       k8s-version      = var.rke-k8s-version
