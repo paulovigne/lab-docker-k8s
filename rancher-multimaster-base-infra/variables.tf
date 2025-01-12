@@ -53,27 +53,27 @@ variable "aws-credential-file" {
 
 variable "rancher-version" {
   description = "Rancher Console Version"
-  default     = "2.8.2"
+  default     = "2.10.1"
 }
 
 variable "k3s-version" {
   description = "K3S Kubernetes Version"
-  default     = "v1.27.9+k3s1"
+  default     = "v1.31.3+k3s1"
 }
 
 variable "rke-version" {
   description = "RKE Utility Version"
-  default     = "1.5.6"
+  default     = "1.7.1"
 }
 
 variable "rke-k8s-version" {
   description = "RKE Kubernetes Version"
-  default     = "v1.27.11-rancher1-1"
+  default     = "v1.31.3-rancher1-1"
 }
 
 variable "cert-manager-version" {
   description = "Cert Manager Version"
-  default     = "v1.14.3"
+  default     = "v1.16.2"
 }
 
 locals {
@@ -99,14 +99,14 @@ locals {
 locals {
   k3s-data-nodes = <<CUSTOM_DATA
 #!/bin/bash
-yum install -y git curl wget jq
+yum install -y git wget jq bash-completion iptables bind-utils
 CUSTOM_DATA
 }
 
 locals {
   rke-data-nodes = <<CUSTOM_DATA
 #!/bin/bash
-yum -y install wget curl jq git openssl11 socat conntrack ipset docker
+yum -y install wget jq git socat conntrack ipset docker bash-completion iptables bind-utils
 sysctl -w net.ipv4.conf.all.forwarding=1
 systemctl start docker && systemctl enable docker
 usermod -G docker ec2-user

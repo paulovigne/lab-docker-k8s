@@ -74,22 +74,22 @@ variable "aws-credential-file" {
 
 variable "rancher-version" {
   description = "Rancher Console Version"
-  default     = "2.8.2"
+  default     = "2.10.1"
 }
 
 variable "k3s-version" {
   description = "K3S Kubernetes Version"
-  default     = "v1.27.9+k3s1"
+  default     = "v1.31.3+k3s1"
 }
 
 variable "rke2-version" {
   description = "RKE2 Kubernetes Version"
-  default     = "v1.27.10+rke2r1"
+  default     = "v1.31.4+rke2r1"
 }
 
 variable "cert-manager-version" {
   description = "Cert Manager Version"
-  default     = "v1.14.3"
+  default     = "v1.16.2"
 }
 
 locals {
@@ -115,7 +115,7 @@ locals {
 locals {
   k3s-data-server = <<CUSTOM_DATA
 #!/bin/bash
-yum install -y git curl wget jq
+yum install -y git wget jq bash-completion bind-utils iptables
 curl -sfL https://get.k3s.io | \
   INSTALL_K3S_VERSION=${var.k3s-version} \
   K3S_TOKEN=${local.share_token} \
@@ -147,7 +147,7 @@ CUSTOM_DATA
 locals {
   rke2-data-server = <<CUSTOM_DATA
 #!/bin/bash
-yum install -y git curl wget jq
+yum install -y git wget jq bash-completion iptables
 curl -sfL https://get.rke2.io | \
   INSTALL_RKE2_VERSION=${var.rke2-version} \
   INSTALL_RKE2_TYPE="server" INSTALL_RKE2_METHOD=tar sh -
@@ -172,7 +172,7 @@ CUSTOM_DATA
 locals {
   rke2-data-agent = <<CUSTOM_DATA
 #!/bin/bash
-yum install -y curl iscsi-initiator-utils.x86_64 libiscsi.x86_64 libiscsi-utils.x86_64 nfs-utils.x86_64
+yum install -y iscsi-initiator-utils.x86_64 libiscsi.x86_64 libiscsi-utils.x86_64 nfs-utils.x86_64 iptables
 curl -sfL https://get.rke2.io | \
 INSTALL_RKE2_VERSION=${var.rke2-version} \
 INSTALL_RKE2_TYPE="agent" INSTALL_RKE2_METHOD=tar sh -
@@ -227,7 +227,7 @@ data "aws_ami" "amazon-linux-2" {
 
   filter {
     name   = "name"
-    values = ["amzn2-ami-hvm*"]
+    values = ["al2023-ami-*-x86_64"]
   }
 }
 

@@ -85,12 +85,12 @@ locals {
 locals {
   custom-data-server = <<CUSTOM_DATA
 #!/bin/bash
+yum install -y git wget jq bash-completion iptables
 curl -sfL https://get.k3s.io | \
   K3S_TOKEN=${local.k3s_token} \
   sh -s - server \
   --node-taint CriticalAddonsOnly=true:NoExecute
 sleep 5
-yum install -y git wget jq bash-completion
 kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
 CUSTOM_DATA
 }
@@ -98,8 +98,8 @@ CUSTOM_DATA
 locals {
   custom-data-client = <<CUSTOM_DATA
 #!/bin/bash
+yum install -y iscsi-initiator-utils.x86_64 libiscsi.x86_64 libiscsi-utils.x86_64 nfs-utils.x86_64 iptables
 curl -sfL https://get.k3s.io | K3S_URL=https://${aws_instance.k8s-k3s-server.private_ip}:6443 K3S_TOKEN=${local.k3s_token} sh -
-yum install -y iscsi-initiator-utils.x86_64 libiscsi.x86_64 libiscsi-utils.x86_64 nfs-utils.x86_64
 CUSTOM_DATA
 }
 
