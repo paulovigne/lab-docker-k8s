@@ -87,7 +87,7 @@ locals {
 locals {
   custom-data-docker = <<CUSTOM_DATA
 #!/bin/bash
-yum -y install wget curl jq git openssl11 socat conntrack ipset docker
+yum -y install wget jq git socat conntrack ipset docker
 sysctl -w net.ipv4.conf.all.forwarding=1
 systemctl start docker && systemctl enable docker
 wget https://github.com/docker/compose/releases/download/v2.23.3/docker-compose-Linux-x86_64
@@ -99,7 +99,7 @@ CUSTOM_DATA
 locals {
   custom-data-haproxy = <<CUSTOM_DATA
 #!/bin/bash
-yum -y install wget curl jq git openssl11 socat conntrack ipset haproxy
+yum -y install wget jq git socat conntrack ipset haproxy
 sysctl -w net.ipv4.conf.all.forwarding=1
 sed -i 's/:5000/:80/g' /etc/haproxy/haproxy.cfg
 systemctl start haproxy && systemctl enable haproxy
@@ -146,7 +146,7 @@ data "aws_ami" "amazon-linux-2" {
 
   filter {
     name   = "name"
-    values = ["amzn2-ami-hvm*"]
+    values = ["al2023-ami-*-x86_64"]
   }
 }
 
