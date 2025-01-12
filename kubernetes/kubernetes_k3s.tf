@@ -90,7 +90,7 @@ curl -sfL https://get.k3s.io | \
   sh -s - server \
   --node-taint CriticalAddonsOnly=true:NoExecute
 sleep 5
-yum install -y git curl wget jq
+yum install -y git wget jq bash-completion
 kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
 CUSTOM_DATA
 }
@@ -143,7 +143,7 @@ data "aws_ami" "amazon-linux-2" {
 
   filter {
     name   = "name"
-    values = ["amzn2-ami-hvm*"]
+    values = ["al2023-ami-*-x86_64"]
   }
 }
 
