@@ -173,6 +173,10 @@ locals {
   rke2-data-agent = <<CUSTOM_DATA
 #!/bin/bash
 yum install -y iscsi-initiator-utils.x86_64 libiscsi.x86_64 libiscsi-utils.x86_64 nfs-utils.x86_64 iptables
+systemctl enable iscsid
+systemctl start iscsid
+systemctl disable iscsi
+systemctl stop iscsi
 curl -sfL https://get.rke2.io | \
 INSTALL_RKE2_VERSION=${var.rke2-version} \
 INSTALL_RKE2_TYPE="agent" INSTALL_RKE2_METHOD=tar sh -
