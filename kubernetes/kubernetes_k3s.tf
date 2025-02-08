@@ -99,6 +99,10 @@ locals {
   custom-data-client = <<CUSTOM_DATA
 #!/bin/bash
 yum install -y iscsi-initiator-utils.x86_64 libiscsi.x86_64 libiscsi-utils.x86_64 nfs-utils.x86_64 iptables
+systemctl enable iscsid
+systemctl start iscsid
+systemctl disable iscsi
+systemctl stop iscsi
 curl -sfL https://get.k3s.io | K3S_URL=https://${aws_instance.k8s-k3s-server.private_ip}:6443 K3S_TOKEN=${local.k3s_token} sh -
 CUSTOM_DATA
 }
