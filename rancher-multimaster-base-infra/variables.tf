@@ -106,7 +106,10 @@ CUSTOM_DATA
 locals {
   rke-data-nodes = <<CUSTOM_DATA
 #!/bin/bash
-yum -y install wget jq git socat conntrack ipset docker bash-completion iptables bind-utils
+yum -y install vim wget jq git socat conntrack ipset docker bash-completion iptables bind-utils
+yum -y install iscsi-initiator-utils.x86_64 libiscsi.x86_64 libiscsi-utils.x86_64 nfs-utils.x86_64
+systemctl enable iscsid; systemctl start iscsid
+systemctl disable iscsi; systemctl stop iscsi
 sysctl -w net.ipv4.conf.all.forwarding=1
 systemctl start docker && systemctl enable docker
 usermod -G docker ec2-user
