@@ -10,18 +10,18 @@ nodes:
         - etcd
 %{ endfor ~}
 
-authentication:
-    strategy: x509
-    sans:
-%{ for index, group in k8s-master-ips ~}
-      - "${k8s-master-ips[index]}"
-%{ endfor ~}
-
 %{ for index, group in k8s-worker-nodes ~}
     - address: ${k8s-worker-nodes[index]}
       user: ec2-user
       role:
         - worker
+%{ endfor ~}
+
+authentication:
+    strategy: x509
+    sans:
+%{ for index, group in k8s-master-ips ~}
+      - "${k8s-master-ips[index]}"
 %{ endfor ~}
 
 upgrade_strategy: 
