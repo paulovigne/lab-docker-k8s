@@ -59,18 +59,6 @@ services:
     extra_args:
       bind-address: 127.0.0.1
 
-  kubelet:
-    cluster_domain: cluster.local
-    cluster_dns_server: 10.43.0.10
-    generate_serving_certificate: true
-    fail_swap_on: true
-    extra_args:
-      volume-plugin-dir: /usr/libexec/kubernetes/kubelet-plugins/volume/exec
-      feature-gates: RotateKubeletServerCertificate=true
-      tls-cipher-suites: TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_128_GCM_SHA256
-    extra_binds:
-      - /usr/libexec/kubernetes/kubelet-plugins/volume/exec:/usr/libexec/kubernetes/kubelet-plugins/volume/exec
-
   etcd:
     uid: 52034
     gid: 52034
