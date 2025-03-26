@@ -1,14 +1,18 @@
 #!/bin/bash
-mkdir -p  ~ec2-user/scripts
 
+echo "Installing kubectl..."
 sudo curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" \
        -O --output-dir /usr/local/bin
 sudo chmod 755 /usr/local/bin/kubectl
 kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
 
+echo "Installing rke..."
 sudo curl -L "https://github.com/rancher/rke/releases/download/v${rke-version}/rke_linux-amd64" \
        -o rke --output-dir /usr/local/bin
 sudo chmod 755 /usr/local/bin/rke
+
+echo "Preparing scripts directory [ ~/scripts ] ..."
+mkdir -p  ~ec2-user/scripts
 
 cat > ~ec2-user/scripts/k3s-server-bootstrap-install.sh <<EOF
 curl -sfL https://get.k3s.io | \
@@ -58,6 +62,7 @@ helm install rancher rancher-stable/rancher \
   --set replicas=3
 EOF
 
+echo "Ajusting permissions..."
 chown -R ec2-user. ~ec2-user/scripts
 chmod +x ~ec2-user/scripts/*.sh
 chmod 600 ~ec2-user/.ssh/id_rsa
